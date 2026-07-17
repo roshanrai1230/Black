@@ -17,6 +17,11 @@ import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminContactMessages from './pages/admin/AdminContactMessages';
 
+import ApplyJob from './pages/ApplyJob';
+import AdminApplications from './pages/admin/AdminApplications';
+import AdminLogin from './pages/admin/AdminLogin';
+import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
+
 function App() {
   return (
     <Router>
@@ -26,17 +31,28 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/careers" element={<Careers />} />
+<<<<<<< HEAD
           {/* <Route path="/company-info" element={<CompanyInfo />} /> */}
+=======
+          <Route path="/careers/apply" element={<ApplyJob />} />
+          <Route path="/company-info" element={<CompanyInfo />} />
+>>>>>>> feature-admin
           <Route path="/contact" element={<Contact />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/services/:id" element={<ServiceDetail />} />
           <Route path="*" element={<NotFound />} />
         </Route>
         
-        {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="messages" element={<AdminContactMessages />} />
+        {/* Admin Login Route */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* Protected Admin Routes */}
+        <Route element={<AdminProtectedRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="messages" element={<AdminContactMessages />} />
+            <Route path="applications" element={<AdminApplications />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

@@ -1,7 +1,30 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Menu, Search, Moon, Bell, LogOut } from 'lucide-react';
 
 const AdminHeader = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      if (token) {
+        await fetch('http://localhost:5000/api/admin/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      }
+    } catch (err) {
+      console.error("Error communicating logout to backend:", err);
+    } finally {
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUser');
+      navigate('/admin/login');
+    }
+  };
+
   return (
     <header className="h-20 w-full bg-[#0a0a0a] border-b border-white/5 flex items-center justify-between px-8 flex-shrink-0">
       
@@ -36,10 +59,13 @@ const AdminHeader = () => {
             8
           </span>
         </button>
-
+ 
         <div className="w-[1px] h-6 bg-white/10 mx-2"></div>
 
-        <button className="flex items-center space-x-2 text-[#888] hover:text-white border border-white/10 hover:border-white/20 bg-[#141414] px-4 py-2 rounded-lg transition-all text-sm font-medium">
+        <button 
+          onClick={handleLogout}
+          className="flex items-center space-x-2 text-[#888] hover:text-white border border-white/10 hover:border-white/20 bg-[#141414] px-4 py-2 rounded-lg transition-all text-sm font-medium"
+        >
           <LogOut size={16} />
           <span>Logout</span>
         </button>
