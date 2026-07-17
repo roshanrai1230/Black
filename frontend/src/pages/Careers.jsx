@@ -1,6 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Careers = () => {
+  const navigate = useNavigate();
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const defaultJobs = [
+    { title: 'Frontend Developer (React.js)', exp: '2-4 Yrs Exp', loc: 'Mohali, India', dept: 'Engineering' },
+    { title: 'Backend Developer (Node.js)', exp: '3-5 Yrs Exp', loc: 'Mohali, India', dept: 'Engineering' },
+    { title: 'UI/UX Designer', exp: '2-4 Yrs Exp', loc: 'Remote', dept: 'Design' },
+    { title: 'DevOps Engineer', exp: '3-6 Yrs Exp', loc: 'Mohali, India', dept: 'Engineering' },
+  ];
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/jobs');
+        const data = await response.json();
+        if (data.success && data.data.length > 0) {
+          const mappedJobs = data.data.map(j => ({
+            title: j.title,
+            exp: j.experience,
+            loc: j.location,
+            dept: j.department
+          }));
+          setJobs(mappedJobs);
+        } else {
+          setJobs(defaultJobs);
+        }
+      } catch (err) {
+        console.error("Error fetching jobs, using defaults:", err);
+        setJobs(defaultJobs);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJobs();
+  }, []);
+
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -61,31 +99,35 @@ const Careers = () => {
           <div className="lg:col-span-2">
             <h2 className="text-2xl font-bold text-white mb-8">Open Positions</h2>
             <div className="space-y-4">
-              {[
-                { title: 'Frontend Developer (React.js)', exp: '2-4 Yrs Exp', loc: 'Mohali, India' },
-                { title: 'Backend Developer (Node.js)', exp: '3-5 Yrs Exp', loc: 'Mohali, India' },
-                { title: 'UI/UX Designer', exp: '2-4 Yrs Exp', loc: 'Remote' },
-                { title: 'DevOps Engineer', exp: '3-6 Yrs Exp', loc: 'Mohali, India' },
-              ].map((job, i) => (
-                <div key={i} className="glass-panel p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-[#4f46e5]/30">
-                  <div>
-                    <h3 className="text-white font-bold text-lg mb-2 group-hover:text-[#4f46e5] transition-colors">{job.title}</h3>
-                    <div className="flex flex-wrap items-center gap-4 text-[#555] text-xs font-medium">
-                      <span className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                        {job.exp}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                        {job.loc}
-                      </span>
+              {loading ? (
+                <div className="glass-panel p-8 text-center text-[#888]">Loading open positions...</div>
+              ) : jobs.length === 0 ? (
+                <div className="glass-panel p-8 text-center text-[#888]">No open positions found.</div>
+              ) : (
+                jobs.map((job, i) => (
+                  <div key={i} className="glass-panel p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-[#4f46e5]/30">
+                    <div>
+                      <h3 className="text-white font-bold text-lg mb-2 group-hover:text-[#4f46e5] transition-colors">{job.title}</h3>
+                      <div className="flex flex-wrap items-center gap-4 text-[#555] text-xs font-medium">
+                        <span className="flex items-center gap-1">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                          {job.exp}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                          {job.loc}
+                        </span>
+                      </div>
                     </div>
+                    <button 
+                      onClick={() => navigate('/careers/apply', { state: { job } })}
+                      className="px-5 py-2 text-xs font-bold text-[#888] bg-[#111] border border-white/10 rounded hover:text-white hover:border-[#4f46e5] transition-colors whitespace-nowrap"
+                    >
+                      Apply Now
+                    </button>
                   </div>
-                  <button className="px-5 py-2 text-xs font-bold text-[#888] bg-[#111] border border-white/10 rounded hover:text-white hover:border-[#4f46e5] transition-colors whitespace-nowrap">
-                    Apply Now
-                  </button>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
 
@@ -96,7 +138,12 @@ const Careers = () => {
               <p className="text-[#888] text-sm leading-relaxed mb-6">
                 We're always looking for talented people. Send us your resume and we'll reach out when a suitable opportunity comes up.
               </p>
-              <button className="btn-gradient w-full">Send Your Resume →</button>
+              <button 
+                onClick={() => navigate('/careers/apply', { state: { job: { title: 'General Application', exp: 'N/A', loc: 'Remote', dept: 'General' } } })}
+                className="btn-gradient w-full"
+              >
+                Send Your Resume →
+              </button>
             </div>
           </div>
 

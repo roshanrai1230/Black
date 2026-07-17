@@ -8,6 +8,22 @@ import {
 
 const AdminSidebar = () => {
   const [unreadMessages, setUnreadMessages] = useState(0);
+  const [adminUser, setAdminUser] = useState({
+    name: 'Admin User',
+    email: 'admin@lexvra.tech',
+    picture: 'https://i.pravatar.cc/150?u=a042581f4e29026704d'
+  });
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('adminUser');
+    if (userStr) {
+      try {
+        setAdminUser(JSON.parse(userStr));
+      } catch (err) {
+        console.error("Error parsing admin user details", err);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     // Function to fetch unread count
@@ -69,7 +85,15 @@ const AdminSidebar = () => {
             <NavItem icon={<FolderKanban size={18} />} label="Projects" />
             <NavItem icon={<Layers size={18} />} label="Services" />
             <NavItem icon={<Quote size={18} />} label="Testimonials" />
-            <NavItem icon={<Briefcase size={18} />} label="Careers" />
+            <li>
+              <NavLink 
+                to="/admin/applications" 
+                className={({isActive}) => `flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-colors group ${isActive ? 'bg-[#4f46e5]/10 text-white' : 'text-[#888] hover:text-white hover:bg-white/5'}`}
+              >
+                <span className="text-[#666] group-hover:text-white transition-colors"><Briefcase size={18} /></span>
+                <span className="text-sm">Careers</span>
+              </NavLink>
+            </li>
             
             <li>
               <NavLink 
@@ -122,13 +146,13 @@ const AdminSidebar = () => {
         <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#141414] to-[#222] border border-white/10 flex items-center justify-center overflow-hidden">
-               <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Admin" className="w-full h-full object-cover" />
+               <img src={adminUser.picture} alt="Admin" className="w-full h-full object-cover" />
             </div>
-            <div className="text-left">
-              <p className="text-white text-sm font-medium">Admin User</p>
+            <div className="text-left max-w-[130px]">
+              <p className="text-white text-xs font-semibold truncate">{adminUser.name}</p>
               <div className="flex items-center space-x-1 mt-0.5">
-                 <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                 <p className="text-[#888] text-[10px]">Super Admin</p>
+                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0"></div>
+                 <p className="text-[#888] text-[9px] truncate">{adminUser.email}</p>
               </div>
             </div>
           </div>
