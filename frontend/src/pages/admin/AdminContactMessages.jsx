@@ -36,6 +36,21 @@ const AdminContactMessages = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this message?")) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/contact/${id}`, {
+          method: 'DELETE'
+        });
+        if (response.ok) {
+          setMessages(messages.filter(msg => msg._id !== id));
+        }
+      } catch (error) {
+        console.error("Error deleting message:", error);
+      }
+    }
+  };
+
   return (
     <div className="p-8 w-full max-w-[1600px] mx-auto">
       
@@ -124,7 +139,11 @@ const AdminContactMessages = () => {
                             <Check size={14} />
                           </span>
                         )}
-                        <button className="p-1.5 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors tooltip" title="Delete">
+                        <button 
+                          onClick={() => handleDelete(msg._id)} 
+                          className="p-1.5 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors tooltip" 
+                          title="Delete"
+                        >
                           <Trash2 size={14} />
                         </button>
                       </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Users, FolderKanban, Building2, Mail, Briefcase, Calendar, MoreHorizontal, ArrowUpRight, ArrowDownRight, User, CircleDot } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -30,6 +30,43 @@ const recentProjects = [
 ];
 
 const DashboardContent = () => {
+  const [msgStats, setMsgStats] = useState({ total: 0, thisMonth: 0, lastMonth: 0 });
+
+  useEffect(() => {
+    const fetchMsgStats = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/contact');
+        const data = await res.json();
+        if (data.success) {
+          const messages = data.data;
+          const now = new Date();
+
+          const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+          const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+          const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
+          const thisMonthCount = messages.filter(m => new Date(m.createdAt) >= thisMonthStart).length;
+          const lastMonthCount = messages.filter(m => {
+            const d = new Date(m.createdAt);
+            return d >= lastMonthStart && d <= lastMonthEnd;
+          }).length;
+
+          setMsgStats({ total: messages.length, thisMonth: thisMonthCount, lastMonth: lastMonthCount });
+        }
+      } catch (err) {
+        console.error('Failed to fetch message stats:', err);
+      }
+    };
+    fetchMsgStats();
+  }, []);
+
+  // Calculate trend percentage
+  const trendValue = msgStats.lastMonth === 0
+    ? (msgStats.thisMonth > 0 ? 100 : 0)
+    : Math.round(((msgStats.thisMonth - msgStats.lastMonth) / msgStats.lastMonth) * 100);
+  const trendUp = trendValue >= 0;
+  const trendStr = `${trendUp ? '+' : ''}${trendValue}%`;
+
   return (
     <div className="p-8 w-full max-w-[1600px] mx-auto">
       
@@ -50,7 +87,7 @@ const DashboardContent = () => {
         <StatCard icon={<Users size={20}/>} title="Total Users" value="1,248" trend="+12.5%" trendUp={true} color="text-purple-500" bg="bg-purple-500/10" />
         <StatCard icon={<FolderKanban size={20}/>} title="Total Projects" value="86" trend="+8.2%" trendUp={true} color="text-blue-500" bg="bg-blue-500/10" />
         <StatCard icon={<Building2 size={20}/>} title="Total Clients" value="312" trend="+9.1%" trendUp={true} color="text-indigo-500" bg="bg-indigo-500/10" />
-        <StatCard icon={<Mail size={20}/>} title="Contact Messages" value="45" trend="+18.7%" trendUp={true} color="text-pink-500" bg="bg-pink-500/10" />
+        <StatCard icon={<Mail size={20}/>} title="Contact Messages" value={msgStats.total.toString()} trend={trendStr} trendUp={trendUp} color="text-pink-500" bg="bg-pink-500/10" />
         <StatCard icon={<Briefcase size={20}/>} title="Career Applications" value="67" trend="+15.3%" trendUp={true} color="text-teal-500" bg="bg-teal-500/10" />
       </div>
 

@@ -78,9 +78,26 @@ const markAsRead = async (req, res) => {
   }
 };
 
+// @desc    Delete message
+// @route   DELETE /api/contact/:id
+// @access  Private/Admin
+const deleteMessage = async (req, res) => {
+  try {
+    const message = await ContactMessage.findByIdAndDelete(req.params.id);
+    if (!message) {
+      return res.status(404).json({ success: false, message: 'Message not found' });
+    }
+    res.status(200).json({ success: true, message: 'Message deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting message:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
 module.exports = {
   submitMessage,
   getMessages,
   getUnreadCount,
-  markAsRead
+  markAsRead,
+  deleteMessage
 };

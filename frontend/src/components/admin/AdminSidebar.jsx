@@ -64,11 +64,6 @@ const AdminSidebar = () => {
         <div className="mb-6">
           <p className="px-4 text-xs font-bold tracking-wider text-[#666] mb-3">MANAGEMENT</p>
           <ul className="space-y-1">
-            <NavItem icon={<Users size={18} />} label="Users" />
-            <NavItem icon={<Building2 size={18} />} label="Clients" />
-            <NavItem icon={<FolderKanban size={18} />} label="Projects" />
-            <NavItem icon={<Layers size={18} />} label="Services" />
-            <NavItem icon={<Quote size={18} />} label="Testimonials" />
             <NavItem icon={<Briefcase size={18} />} label="Careers" />
             
             <li>
@@ -90,30 +85,7 @@ const AdminSidebar = () => {
           </ul>
         </div>
 
-        {/* CONTENT */}
-        <div className="mb-6">
-          <p className="px-4 text-xs font-bold tracking-wider text-[#666] mb-3">CONTENT</p>
-          <ul className="space-y-1">
-            <NavItem icon={<FileText size={18} />} label="Pages" />
-            <NavItem icon={<PenTool size={18} />} label="Blog Posts" />
-            <NavItem icon={<Image size={18} />} label="Media Library" />
-            <NavItem icon={<HelpCircle size={18} />} label="FAQs" />
-            <NavItem icon={<UserCircle2 size={18} />} label="Team Members" />
-          </ul>
-        </div>
 
-        {/* SETTINGS */}
-        <div className="mb-6">
-          <p className="px-4 text-xs font-bold tracking-wider text-[#666] mb-3">SETTINGS</p>
-          <ul className="space-y-1">
-            <NavItem icon={<Settings size={18} />} label="General Settings" />
-            <NavItem icon={<Search size={18} />} label="SEO Settings" />
-            <NavItem icon={<Link2 size={18} />} label="Social Links" />
-            <NavItem icon={<ShieldCheck size={18} />} label="Admin Users" />
-            <NavItem icon={<UserCircle2 size={18} />} label="Roles & Permissions" />
-            <NavItem icon={<Database size={18} />} label="Backup & Logs" />
-          </ul>
-        </div>
 
       </div>
 
