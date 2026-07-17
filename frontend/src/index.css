@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #030303;
+    color: #EDEDED;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-gradient {
+    @apply px-6 py-2.5 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#9333ea] hover:opacity-90 text-white font-medium transition-opacity shadow-[0_0_15px_rgba(79,70,229,0.4)];
+  }
+
+  .btn-outline {
+    @apply px-6 py-2.5 rounded-full border border-white/20 hover:border-white/50 bg-transparent text-white text-sm font-medium transition-colors flex items-center gap-2;
+  }
+
+  .text-gradient {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#4f46e5] to-[#c084fc];
+  }
+
+  .glass-panel {
+    @apply bg-[#0A0A0A] border border-white/[0.04] rounded-xl;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #030303; 
+}
+::-webkit-scrollbar-thumb {
+  background: #222; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444; 
+}
